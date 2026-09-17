@@ -439,6 +439,87 @@ def cmd_next(state, require_un):
     print(f'   推送: {"成功 ✔" if ok else "失败（请手动 git push）"}')
     print(f'   新页: {nxt["local"]}   线上: {state.get("site_url","")}')
 
+# ------------------------------------------------------------ 学习堆栈 ----
+def load_learn_stack():
+    p = os.path.join(ROOT, 'learn_stack.json')
+    if os.path.exists(p):
+        return json.load(open(p, encoding='utf-8'))
+    return {'stack': []}
+
+def save_learn_stack(s):
+    json.dump(s, open(os.path.join(ROOT, 'learn_stack.json'), 'w', encoding='utf-8'),
+              ensure_ascii=False, indent=2)
+
+def cmd_stack(args):
+    """学习堆栈（后进先出）：遇到链接压栈并生成学习文档，学完出栈返回原处。
+    用法: stack push <url> [标题] | stack pop | stack show"""
+    st = load_learn_stack()
+    sub = [a for a in (args or []) if not a.startswith('--')]
+    if not sub or sub[0] == 'show':
+        if not st['stack']:
+            print('📚 学习堆栈为空。')
+            return
+        print(f'📚 学习堆栈（共 {len(st["stack"])} 项，后进先出）：')
+        for i, e in enumerate(reversed(st['stack']), 1):
+            ret = e.get('ret') or {}
+            print(f'  {i}. [{e.get("status","学习中")}] {e.get("title","")}')
+            print(f'      🔗 {e.get("url","")}')
+            if e.get('learn_file'):
+                print(f'      📄 学习文档: {e["learn_file"]}')
+            if ret.get('page_title'):
+                print(f'      ↩️  返回: {ret["page_title"]} ({ret.get("page_local","")})')
+        return
+    if sub[0] == 'push':
+        if len(sub) < 2:
+            print('用法: stack push <url> [标题]'); return
+        url = sub[1]
+        title = ' '.join(sub[2:]) or '学习链接'
+        state = load_state()
+        pg = current_page(state)
+        ret = {'page_title': pg['title'] if pg else '', 'page_local': pg['local'] if pg else ''}
+        from urllib.parse import urlparse
+        path = urlparse(url).path
+        slug = re.sub(r'\.html$', '', path)
+        slug = re.sub(r'[^a-z0-9]+', '-', slug.lower()).strip('-') or 'learn'
+        learn_dir = os.path.join(ROOT, 'learn')
+        os.makedirs(learn_dir, exist_ok=True)
+        learn_file = os.path.join('learn', f'{slug}.md')
+        entry = {'url': url, 'title': title, 'ret': ret,
+                 'learn_file': learn_file, 'status': '学习中'}
+        md = (f'# {title}\n\n'
+              f'- 链接: {url}\n'
+              f'- 来源: {ret["page_title"]} ({ret["page_local"]})\n\n'
+              f'## 学习笔记\n\n（在这里记录你学到的内容）\n')
+        with open(os.path.join(ROOT, learn_file), 'w', encoding='utf-8') as f:
+            f.write(md)
+        st['stack'].append(entry)
+        save_learn_stack(st)
+        print(f'📥 已压栈（后进先出）：{title}')
+        print(f'   🔗 {url}')
+        print(f'   📄 学习文档已创建: {learn_file}')
+        print(f'   ↩️  学习完请执行: python3 sop_skill.py stack pop')
+        return
+    if sub[0] == 'pop':
+        if not st['stack']:
+            print('📚 学习堆栈为空，没有可返回的内容。'); return
+        e = st['stack'].pop()
+        e['status'] = '已完成'
+        save_learn_stack(st)
+        print(f'✅ 出栈：{e.get("title","")}（已完成学习）')
+        print(f'   🔗 {e.get("url","")}')
+        if e.get('learn_file'):
+            print(f'   📄 学习文档: {e["learn_file"]}')
+        ret = e.get('ret') or {}
+        if ret.get('page_local'):
+            print(f'   ↩️  返回: {ret["page_title"]} ({ret["page_local"]})')
+        if st['stack']:
+            top = st['stack'][-1]
+            print(f'   📚 堆栈中还有 {len(st["stack"])} 项，下一项: {top.get("title","")}')
+        else:
+            print('   📚 堆栈已空，可回到主翻译流程。')
+        return
+    print('未知子命令，支持: stack push <url> [标题] | stack pop | stack show')
+
 def cmd_sync():
     """按官方左侧目录（TOC）顺序重建 state.json（不是字母序 sitemap）"""
     r = requests.get(TOC_URL, timeout=40); r.raise_for_status()
@@ -475,7 +556,7 @@ def main():
         i = args.index('--repo')
         ROOT = os.path.abspath(args[i + 1])
     cmd = 'run'
-    if args and args[0] in ('status', 'fill', 'review', 'publish', 'next', 'run', 'sync'):
+    if args and args[0] in ('status', 'fill', 'review', 'publish', 'next', 'run', 'sync', 'stack'):
         cmd = args[0]
     require_un = '--ignore-understanding' not in args
     state = load_state()
@@ -493,6 +574,8 @@ def main():
         cmd_publish(state, require_un)
     elif cmd == 'next':
         cmd_next(state, require_un)
+    elif cmd == 'stack':
+        cmd_stack(args[1:])
     else:  # run
         pg = current_page(state)
         if pg is None:

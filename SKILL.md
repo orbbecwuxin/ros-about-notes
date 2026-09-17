@@ -11,6 +11,7 @@
 3. **展示新章节/新页时，必须同时给出网址**：该页的官方网址（`docs.ros.org/...`）和本站网址（`orbbecwuxin.github.io/ros-about-notes/...`）。
 4. **勘误时把有价值的英文短语写进该段「💡 理解」框**：将勘误中纠正/涉及的有用短语连同中文含义记入理解，作为短语笔记。例如 `are for general use and provide...`（用于常规使用并提供…）、`dive in and start using`（立即上手使用）、`is great for...`（非常适合…）。
 5. **每次展示段落都要显示本段的所有链接**（fill/review 都要列出：链接文字 → 网址），并且有链接时要提示用户先去点开学习相关内容，再填写翻译/理解；翻译/勘误完成后也要提醒用户记得去学习这些链接指向的内容。
+6. **学习堆栈（后进先出）**：当段落里有链接、需要深入学习时，用 `stack push <url> [标题]` 把链接压栈并自动生成一份学习文档（`learn/<slug>.md`，记录链接、来源页），同时记下返回位置（当前页）；学习完成后用 `stack pop` 出栈并返回原页。堆栈用 `stack show` 查看。
 
 ## 用途 / 何时使用
 
@@ -63,6 +64,13 @@ python3 sop_skill.py run
 
 # ⑦ 从官方 sitemap 重建进度清单
 python3 sop_skill.py sync
+
+# ⑧ 学习堆栈（后进先出）：把要学的链接压栈并生成学习文档
+python3 sop_skill.py stack push "https://docs.ros.org/en/jazzy/..." "标题"
+# ⑨ 查看学习堆栈
+python3 sop_skill.py stack show
+# ⑩ 学习完成，出栈返回原页
+python3 sop_skill.py stack pop
 ```
 
 可选参数：`--ignore-understanding`（判定“完成”时只看译文、不要求理解）。
