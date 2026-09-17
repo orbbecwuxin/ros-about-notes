@@ -133,6 +133,15 @@ def fill_page(pg, state):
         print('-' * 70)
         print('【英文原文】')
         print(orig)
+        links = []
+        if p:
+            for a in p.find_all('a', href=True):
+                links.append((a.get_text(' ', strip=True).strip() or '(链接)', a.get('href')))
+        if links:
+            print('🔗 本段链接：')
+            for t, h in links:
+                print(f'   · {t} → {h}')
+            print('   💡 建议：先点开链接学习相关内容，再填写翻译/理解')
         print('-' * 70)
         print(f'【现有译文】{cur_tr.get_text(strip=True) if cur_tr else "（未填）"}')
         print(f'【现有理解】{cur_un.get_text(strip=True) if cur_un else "（未填）"}')
@@ -353,6 +362,14 @@ def cmd_review(state, require_un):
             flag.append('仍有占位符')
         print(f'\n--- 第{i}段（{title}）---')
         print('【英文原文】', orig if orig else '（无）')
+        links = []
+        if p:
+            for a in p.find_all('a', href=True):
+                links.append((a.get_text(' ', strip=True).strip() or '(链接)', a.get('href')))
+        if links:
+            print('🔗 本段链接：')
+            for t, h in links:
+                print(f'   · {t} → {h}')
         print('【译   文】', tr_t if tr_t else '（未填）')
         print('【理   解】', un_t if un_t else '（未填）')
         if flag:
