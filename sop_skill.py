@@ -87,8 +87,23 @@ def is_done(total, tr_done, un_done, require_understanding=True):
     return True
 
 # ------------------------------------------------------------ 交互填写 ----
-def fill_page(local_file):
-    path = os.path.join(ROOT, local_file)
+def page_urls(pg, state=None):
+    """返回 (官方网址, 本站网址)"""
+    official = pg.get('url', '')
+    site = ''
+    if state and pg.get('local'):
+        site = state.get('site_url', '') + pg['local']
+    return official, site
+
+def fill_page(pg, state):
+    local = pg['local']
+    path = os.path.join(ROOT, local)
+    official, site = page_urls(pg, state)
+    print('=' * 70)
+    print(f'📄 官方网址: {official}')
+    if site:
+        print(f'🌐 本站网址: {site}')
+    print('=' * 70)
     soup = BeautifulSoup(open(path, encoding='utf-8').read(), 'html.parser')
     boxes = soup.select('.my-translation')
     for i, box in enumerate(boxes, 1):
@@ -279,7 +294,7 @@ def cmd_fill(state, require_un):
     pg = current_page(state)
     if not pg:
         print('所有页面已完成。'); return
-    fill_page(pg['local'])
+    fill_page(pg, state)
     print('💾 已保存到本地，但【不会自动提交/推送】。')
     print('   请把翻译交给 AI 勘误： python3 sop_skill.py review')
     print('   勘误通过后再发布：   python3 sop_skill.py publish')
@@ -295,7 +310,12 @@ def cmd_review(state, require_un):
         print('当前页还没有本地文件，先运行 fill 或 run 拉取。'); return
     soup = BeautifulSoup(open(path, encoding='utf-8').read(), 'html.parser')
     boxes = soup.select('.my-translation')
+    official, site = page_urls(pg, state)
     print(f'📖 当前页：{pg["title"]}（{local}）共 {len(boxes)} 段，供 AI 勘误：')
+    print(f'   📄 官方网址: {official}')
+    if site:
+        print(f'   🌐 本站网址: {site}')
+    print()
     issues = []
     for i, box in enumerate(boxes, 1):
         # 章节 + 原始英文段落
@@ -377,7 +397,11 @@ def cmd_next(state, require_un):
         save_state(state)
         print('🎉 全部页面已完成！')
         return
-    print(f'✅ 当前页“{pg["title"]}”已发布，拉取下一页：{nxt["title"]} ({nxt["url"]})')
+    print(f'✅ 当前页“{pg["title"]}”已发布，拉取下一页：{nxt["title"]}')
+    off, site = page_urls(nxt, state)
+    print(f'   📄 官方网址: {off}')
+    if site:
+        print(f'   🌐 本站网址: {site}')
     n = mirror_page(nxt['url'], nxt['local'])
     print(f'   已生成 {nxt["local"]}，插入 {n} 个译文框')
     save_state(state)
@@ -446,6 +470,10 @@ def main():
         local = pg['local']
         if not os.path.exists(os.path.join(ROOT, local)):
             print(f'📥 当前页无本地文件，拉取新页：{pg["title"]}')
+            off, site = page_urls(pg, state)
+            print(f'   📄 官方网址: {off}')
+            if site:
+                print(f'   🌐 本站网址: {site}')
             n = mirror_page(pg['url'], local)
             print(f'   已生成 {local}，插入 {n} 个译文框')
             save_state(state)
