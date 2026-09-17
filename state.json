@@ -29,7 +29,7 @@
       "url": "https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html",
       "local": "installation-ubuntu-install-debs.html",
       "done": false,
-      "reviewed": false,
+      "reviewed": true,
       "skipped": false
     },
     {
