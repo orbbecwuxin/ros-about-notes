@@ -111,6 +111,8 @@ def fill_page(local_file):
         print('-' * 70)
         print(f'【现有译文】{cur_tr.get_text(strip=True) if cur_tr else "（未填）"}')
         print(f'【现有理解】{cur_un.get_text(strip=True) if cur_un else "（未填）"}')
+        print('-' * 70)
+        print('👉 请把这一段的中文翻译 + 理解发给我')
         print()
         tr = input('📝 译文（回车=跳过）：').strip()
         if tr:

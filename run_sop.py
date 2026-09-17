@@ -102,6 +102,8 @@ def main():
         print('-' * 70)
         print(f'【现有译文】{cur_tr if cur_tr else "（未填）"}')
         print(f'【现有理解】{cur_un if cur_un else "（未填）"}')
+        print('-' * 70)
+        print('👉 请把这一段的中文翻译 + 理解发给我')
 
         if list_only:
             print()
