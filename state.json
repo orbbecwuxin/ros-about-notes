@@ -33,6 +33,15 @@
       "skipped": false
     },
     {
+      "slug": "how-to-guides-working-with-multiple-rmw-implementations",
+      "title": "Working with multiple ROS 2 middleware implementations",
+      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Working-with-multiple-RMW-implementations.html",
+      "local": "how-to-guides-working-with-multiple-rmw-implementations.html",
+      "done": false,
+      "reviewed": false,
+      "skipped": false
+    },
+    {
       "slug": "installation-windows-install-binary",
       "title": "Windows (binary)",
       "url": "https://docs.ros.org/en/jazzy/Installation/Windows-Install-Binary.html",
@@ -1891,15 +1900,6 @@
       "title": "rosbag2: Overriding QoS Policies",
       "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Overriding-QoS-Policies-For-Recording-And-Playback.html",
       "local": "how-to-guides-overriding-qos-policies-for-recording-and-playback.html",
-      "done": false,
-      "reviewed": false,
-      "skipped": false
-    },
-    {
-      "slug": "how-to-guides-working-with-multiple-rmw-implementations",
-      "title": "Working with multiple ROS 2 middleware implementations",
-      "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Working-with-multiple-RMW-implementations.html",
-      "local": "how-to-guides-working-with-multiple-rmw-implementations.html",
       "done": false,
       "reviewed": false,
       "skipped": false
