@@ -25,6 +25,7 @@ from bs4 import BeautifulSoup, Comment
 
 ROOT = os.environ.get('ROS_NOTES_REPO') or os.path.dirname(os.path.abspath(__file__))
 SITEMAP_URL = 'https://docs.ros.org/en/jazzy/sitemap.xml'
+TOC_URL = 'https://docs.ros.org/en/jazzy/index.html'
 BASE_URL = 'https://docs.ros.org/en/jazzy/'
 GIT_NAME, GIT_EMAIL = 'ros-skill', 'ros-skill@local'
 
@@ -244,8 +245,10 @@ BOX_HTML = '''
 
 # ------------------------------------------------------------ 主流程 ----
 def current_page(state):
-    """当前页 = 第一个未完成 (done=false) 的页面"""
+    """当前页 = 按 TOC 顺序第一个未完成 (done=false) 且未跳过 (skipped) 的页面"""
     for pg in state['pages']:
+        if pg.get('skipped'):
+            continue
         if not pg.get('done'):
             return pg
     return None
@@ -362,10 +365,12 @@ def cmd_next(state, require_un):
         print(f'❌ 当前页“{pg["title"]}”已填完，但还未经过勘误发布。')
         print('   流程: python3 sop_skill.py review  →  publish  →  next')
         return
-    # 完成且已发布 → 标记 done，找下一页
+    # 完成且已发布 → 标记 done，找下一页（跳过 skipped）
     pg['done'] = True
     nxt = None
     for cand in state['pages']:
+        if cand.get('skipped'):
+            continue
         if not cand.get('done'):
             nxt = cand; break
     if nxt is None:
@@ -381,22 +386,33 @@ def cmd_next(state, require_un):
     print(f'   新页: {nxt["local"]}   线上: {state.get("site_url","")}')
 
 def cmd_sync():
-    r = requests.get(SITEMAP_URL, timeout=40); r.raise_for_status()
-    urls = re.findall(r'<loc>([^<]+)</loc>', r.text)
+    """按官方左侧目录（TOC）顺序重建 state.json（不是字母序 sitemap）"""
+    r = requests.get(TOC_URL, timeout=40); r.raise_for_status()
+    soup = BeautifulSoup(r.text, 'html.parser')
+    nav = soup.find('nav', class_='wy-nav-side') or soup.find('div', class_='wy-menu')
+    order = []
+    for a in nav.find_all('a', href=True):
+        h = a['href']
+        if h.endswith('.html') and not h.startswith(('http', '#')) and not h.startswith('index.html'):
+            order.append((h, ' '.join(a.get_text(' ', strip=True).split())))
     state = load_state()
     existing = {p['url']: p for p in state.get('pages', [])}
     new_pages = []
-    for u in urls:
+    for path, title in order:
+        u = BASE_URL + path
+        slug = re.sub(r'\.html$', '', path)
+        slug = re.sub(r'[^a-z0-9]+', '-', slug.lower()).strip('-')
         if u in existing:
-            new_pages.append(existing[u])
+            p = existing[u]
         else:
-            slug = re.sub(r'\.html$', '', urlparse(u).path.replace('/en/jazzy/', ''))
-            slug = re.sub(r'[^a-z0-9]+', '-', slug.lower()).strip('-')
-            new_pages.append({'slug': slug, 'title': slug.replace('-', ' ').title(),
-                              'url': u, 'local': f'{slug}.html', 'done': False})
+            p = {'slug': slug, 'title': title or slug.replace('-', ' ').title(),
+                 'url': u, 'local': f'{slug}.html', 'done': False}
+        p.setdefault('skipped', False)
+        new_pages.append(p)
     state['pages'] = new_pages
+    state['toc_url'] = TOC_URL
     save_state(state)
-    print(f'已同步，共 {len(new_pages)} 页')
+    print(f'已按官方目录顺序同步，共 {len(new_pages)} 页')
 
 def main():
     global ROOT
