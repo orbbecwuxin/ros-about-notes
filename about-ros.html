@@ -520,10 +520,7 @@
 This article introduces the main areas of the ecosystem and outlines their intended use.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
 <span class="my-tr-text">ROS（机器人操作系统）是一个开源生态系统，为构建、部署、运行和维护机器人应用提供框架、工具和库。本文介绍该生态系统的主要领域，并概述它们的预期用途。</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-text">这一段是全文总起：说明 ROS 本质上是开源生态（框架+工具+库），并预告本文要讲的内容范围。</span>
-</div></div>
+</div>
 <p><strong>Area: ROS-framework, ROS-tools, ROS-capabilities | Content-type: about | Experience: beginner</strong></p>
 <nav class="contents local" id="table-of-contents">
 <p class="topic-title">Table of Contents</p>
@@ -546,28 +543,19 @@ In logistics, it helps robots move goods in warehouses by providing navigation, 
 In manufacturing, it enables advanced tasks such as automated pick-and-place operations using vision systems for accurate handling.
 In healthcare, ROS supports robotic systems that assist with patient care and improve efficiency in clinical workflows.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 用于机器人学的多个领域。在物流领域，它通过提供导航、建图、运动控制以及多机器人之间的协调，帮助机器人在仓库中搬运货物。在制造领域，它支持诸如使用视觉系统进行精确定位的自动抓取与放置（pick-and-place）操作等高级任务。在医疗领域，ROS 支持协助患者护理、提升临床工作流程效率的机器人系统。</span>
+</div>
 <p>Watch the <a class="reference external" href="https://vimeo.com/237016358">ROS video</a> for a quick introduction.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">观看 ROS 视频，快速了解 ROS。</span>
+</div>
 </section>
 <section id="the-ecosystem">
 <h2><a class="toc-backref" href="about-ros.html#id2" role="doc-backlink">The ecosystem</a><a class="headerlink" href="about-ros.html#the-ecosystem" title="Link to this heading"></a></h2>
 <p>Despite its name, ROS is actually not an operating system in the traditional sense, but a set of tools and libraries that help developers create robots using various platforms and programming languages.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">尽管它名叫 ROS（机器人操作系统），但 ROS 实际上并不是传统意义上的操作系统，而是一组工具和库，帮助开发者使用各种平台和编程语言来创建机器人。</span>
+</div>
 <img alt="Animated high level diagram of the ROS ecosystem" src="_images/ROS-ecosystem.gif"/>
 </section>
 <section id="framework">
@@ -575,26 +563,20 @@ In healthcare, ROS supports robotic systems that assist with patient care and im
 <p>The ROS framework is the “plumbing” which allows for communication between parts of a robot, and within parts of a robot.
 It includes messaging, standard interfaces, and support for multiple programming languages and platforms.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
+<span class="my-tr-text">ROS 框架就是机器人的“通信管道系统”，负责让机器人不同部分之间以及各部分内部能够相互通信。它包含消息传递、标准接口，以及对多种编程语言和平台的支持。</span>
 <div class="my-understanding">
 <span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
+<span class="my-un-text">把机器人比作一栋楼：各个节点像房间，传感器数据/控制指令像水，ROS 的通信机制（Topic、Service、Action、DDS 等）就像水管系统，把“水”送到各个房间。</span>
 </div></div>
 <p>For example, the framework handles sending data from a camera to a processing node or passing commands from a planning system to a motor controller.
 It also provides the structure for sharing software across systems, so developers can build modular and reusable solutions.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">例如，框架负责把摄像头的数据发送给处理节点，或者把来自规划系统的命令传递给电机控制器。它还提供了跨系统共享软件的结构，使开发者能够构建模块化、可复用的解决方案。</span>
+</div>
 <p>ROS consists of the following basic components:</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 由以下基本组件构成：</span>
+</div>
 <ul class="simple">
 <li><p>Nodes</p></li>
 <li><p>Interfaces (topics, services and actions)</p></li>
@@ -607,27 +589,18 @@ It also provides the structure for sharing software across systems, so developer
 <p>Tools in ROS help developers build, test, and monitor robotic systems.
 They do not add new robot behaviours but make development easier.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 中的工具帮助开发者构建、测试和监控机器人系统。它们不会添加新的机器人行为，而是让开发更简单。</span>
+</div>
 <p>For example, visualisation tools can be used to display a robot’s sensors, position, and environment in 3D during testing, which is common in projects involving drones or mobile robots.
 With launch control tools, developers can define and verify how a robot starts up and manages its operation before actual deployment.
 Data recording and playback tools allow you to register robot behaviour for later inspection, which is particularly useful when debugging why the robot did something wrong.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">例如，可视化工具可以在测试期间以 3D 形式显示机器人的传感器、位置和环境，这在涉及无人机或移动机器人的项目中很常见。借助启动控制（launch）工具，开发者可以在实际部署前定义并验证机器人如何启动以及如何管理其运行。数据记录与回放工具允许你记录机器人行为以供后续检查，在调试机器人为何出错时尤其有用。</span>
+</div>
 <p>The core set of tools provided by ROS allows you to handle the following elements of the development workflow:</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 提供的核心工具集让你能够处理开发工作流程中的以下环节：</span>
+</div>
 <ul class="simple">
 <li><p>Introspection</p></li>
 <li><p>Analysis</p></li>
@@ -643,32 +616,23 @@ Data recording and playback tools allow you to register robot behaviour for late
 <p>Capabilities in ROS are ready-to-use packages that offer common functions for robots, such as manipulation, motion planning, and perception.
 These packages allow developers to add advanced behaviours without starting from scratch.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 中的能力（Capabilities）是开箱即用的软件包，为机器人提供常见功能，例如操作（manipulation）、运动规划（motion planning）和感知（perception）。这些软件包让开发者无需从头开始就能添加高级行为。</span>
+</div>
 <p>For example, manipulation packages can control robotic arms for tasks like picking and placing objects in automated workflows.
 Motion planning packages allow robots to move from one point to another by calculating safe paths in their environment.
 Perception packages enable robots to detect and recognise objects or people, supporting tasks such as retrieving objects or working in environments where the robot needs to respond to what it sees.
 Different implementations of the same capabilities allow developers to switch implementations and experiment to find the best implementation for their needs.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">例如，操作（manipulation）软件包可以控制机械臂，在自动化流程中执行抓取和放置物体等任务。运动规划（motion planning）软件包通过计算机器人环境中的安全路径，让机器人能够从一个点移动到另一个点。感知（perception）软件包使机器人能够检测并识别物体或人，支持诸如取回物体，或在机器人需要对其所见作出响应的环境中工作等任务。同一能力的不同实现方式，让开发者可以切换实现并进行试验，从而找到最适合自己需求的实现。</span>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Apart from the packages maintained by Open Robotics, you can also choose from many packages contributed by the ROS community.</p>
 </div>
 <p>ROS offers the following core capabilities either out of the box, or through supported third-party solutions:</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 提供以下核心能力：要么开箱即用，要么通过受支持的第三方解决方案获得。</span>
+</div>
 <ul class="simple">
 <li><p>Simulation</p></li>
 <li><p>Motion planning</p></li>
@@ -682,21 +646,15 @@ Different implementations of the same capabilities allow developers to switch im
 <p>Community in ROS is the global network of developers, researchers, companies, and contributors who help our library of open-source software grow and improve.
 People can contribute to plumbing, tools, and capabilities, and thanks to the community, it is easy to share code, exchange ideas, and work together on projects.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 社区是由开发者、研究人员、公司和贡献者组成的全球网络，他们共同帮助我们的开源软件库不断发展壮大。人们可以为 ROS 的通信管道（plumbing）、工具和能力做出贡献；得益于社区，分享代码、交流想法以及协作开展项目都变得很容易。</span>
+</div>
 </section>
 <section id="integrations">
 <h2><a class="toc-backref" href="about-ros.html#id7" role="doc-backlink">Integrations</a><a class="headerlink" href="about-ros.html#integrations" title="Link to this heading"></a></h2>
 <p>ROS works with other Open Robotics platforms to make development and deployment easier.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 与其他 Open Robotics 平台协同工作，使开发和部署更加容易。</span>
+</div>
 <ul class="simple">
 <li><p><a class="reference external" href="https://gazebosim.org/home">Gazebo</a>: Offers physics-based simulation, so developers can test robots in a virtual environment before using real hardware.</p></li>
 <li><p><a class="reference external" href="https://www.open-rmf.org/">Open-RMF</a> (Robotics Middleware Framework): Helps different robots work together and interact with building systems like lifts and doors.</p></li>
@@ -704,11 +662,8 @@ People can contribute to plumbing, tools, and capabilities, and thanks to the co
 </ul>
 <p>These integrations make it simpler to design, test, and manage robots in complex environments on any budget and with any team size.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">这些集成使在复杂环境中设计、测试和管理机器人变得更加简单，无论预算多少、团队规模大小。</span>
+</div>
 </section>
 <section id="ros-distributions">
 <h2><a class="toc-backref" href="about-ros.html#id8" role="doc-backlink">ROS distributions</a><a class="headerlink" href="about-ros.html#ros-distributions" title="Link to this heading"></a></h2>
@@ -716,18 +671,12 @@ People can contribute to plumbing, tools, and capabilities, and thanks to the co
 Each distribution provides a stable version of the core libraries and tools, plus many community packages.
 This makes it easier for developers to work with a consistent codebase and keep projects compatible.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 发行版（distribution）是一组按固定周期发布的 ROS 软件包。每个发行版都提供稳定版本的核心库和工具，以及许多社区软件包。这使开发者更容易使用一致的代码库，并保持项目之间的兼容性。</span>
+</div>
 <p>ROS has two main versions:</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 有两个主要版本：</span>
+</div>
 <ul class="simple">
 <li><p><a class="reference external" href="https://index.ros.org/">ROS 1</a>: The original framework.</p></li>
 <li><p>ROS 2: The current and actively developed version.</p></li>
@@ -735,37 +684,25 @@ This makes it easier for developers to work with a consistent codebase and keep 
 <p>ROS 1 has reached the end of development, with no new releases planned, while ROS 2 continues to be developed and releases new distributions every year.
 These distributions include updates and improvements, so developers can choose between stability and the latest features.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 1 已停止开发，不再计划发布新版本；而 ROS 2 仍在持续开发，并且每年发布新的发行版。这些发行版包含更新和改进，因此开发者可以在稳定性与最新特性之间做出选择。</span>
+</div>
 </section>
 <section id="supported-systems">
 <h2><a class="toc-backref" href="about-ros.html#id9" role="doc-backlink">Supported systems</a><a class="headerlink" href="about-ros.html#supported-systems" title="Link to this heading"></a></h2>
 <p>ROS runs on Ubuntu, Windows, and macOS, but we strongly recommend that you use a Tier 1 platform for your ROS distribution.
 ROS on macOS is supported by the community, and we do not recommended it for new users.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">ROS 可运行于 Ubuntu、Windows 和 macOS，但我们强烈建议为你的 ROS 发行版使用一级（Tier 1）平台。macOS 上的 ROS 由社区提供支持，我们不建议新用户使用。</span>
+</div>
 <p>Ubuntu support depends on the ROS distribution, with each distribution requiring a specific Ubuntu LTS (long-term support) release.
 Other platforms may require building from source or using containers.</p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">对 Ubuntu 的支持取决于 ROS 发行版，每个发行版都需要特定的 Ubuntu LTS（长期支持）版本。其他平台可能需要从源码构建或使用容器。</span>
+</div>
 <p><a class="reference internal" href="https://docs.ros.org/en/jazzy/Releases/Release-Rolling-Ridley.html"><span class="doc">See full details of currently supported platforms and support tiers</span></a></p><div class="my-translation">
 <span class="my-tr-label">📝 译文：</span>
-<span class="my-tr-placeholder">（在此填写中文翻译）</span>
-<div class="my-understanding">
-<span class="my-un-label">💡 理解：</span>
-<span class="my-un-placeholder">（用一句话写下你对这段的理解，可选填）</span>
-</div></div>
+<span class="my-tr-text">查看当前受支持平台和支持级别的完整详情。</span>
+</div>
 </section>
 </section>
 </div>
