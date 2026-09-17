@@ -46,7 +46,7 @@ python3 sop_skill.py status
 # ② 用户填写当前页 —— 只保存到本地，绝不自动提交
 python3 sop_skill.py fill
 
-# ③ 输出当前页所有译文/理解，供 AI 勘误
+# ③ 逐段输出【英文原文 + 译文 + 理解】，供 AI 勘误
 python3 sop_skill.py review
 
 # ④ AI 勘误通过后：commit + push（发布翻译）
