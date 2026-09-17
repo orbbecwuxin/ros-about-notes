@@ -9,7 +9,8 @@
       "title": "About ROS",
       "url": "https://docs.ros.org/en/jazzy/About-ROS.html",
       "local": "about-ros.html",
-      "done": false
+      "done": true,
+      "reviewed": true
     },
     {
       "slug": "citations",
