@@ -28,7 +28,7 @@
       "title": "Ubuntu (deb packages)",
       "url": "https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html",
       "local": "installation-ubuntu-install-debs.html",
-      "done": false,
+      "done": true,
       "reviewed": true,
       "skipped": false
     },
