@@ -95,6 +95,15 @@ def page_urls(pg, state=None):
         site = state.get('site_url', '') + pg['local']
     return official, site
 
+def local_target(rel):
+    """若 rel 对应的文档页已有本地镜像，返回本地文件名；否则返回 None"""
+    slug = re.sub(r'\.html$', '', rel)
+    slug = re.sub(r'[^a-z0-9]+', '-', slug.lower()).strip('-')
+    local = f'{slug}.html'
+    if os.path.exists(os.path.join(ROOT, local)):
+        return local
+    return None
+
 def fill_page(pg, state):
     local = pg['local']
     path = os.path.join(ROOT, local)
@@ -183,8 +192,12 @@ def mirror_page(url, local_file):
                     print('  跳过资源下载失败:', rel, e)
                 el[attr] = rel
             elif rel.endswith('.html') or '/' in rel:
-                # 文档链接 → 官方绝对地址（保持可点）
-                el[attr] = base + rel
+                # 文档链接：已本地镜像 → 本地翻译页；否则 → 官方绝对地址
+                lt = local_target(rel)
+                if lt:
+                    el[attr] = lt
+                else:
+                    el[attr] = base + rel
 
     # 2) 移除 Google 统计
     for c in soup.find_all(string=lambda t: isinstance(t, Comment) and 'Google tag' in t):
