@@ -19,7 +19,7 @@
       "title": "Installation",
       "url": "https://docs.ros.org/en/jazzy/Installation.html",
       "local": "installation.html",
-      "done": false,
+      "done": true,
       "reviewed": true,
       "skipped": false
     },
