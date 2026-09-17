@@ -43,3 +43,15 @@ _images/             页面图片
 README.md            本说明
 .nojekyll            让 GitHub Pages 按纯 HTML 发布
 ```
+
+## 自动化技能（Skill）
+
+本仓库附带一个**自动推进翻译的技能** `sop_skill.py`：
+检查当前页翻译/理解是否完成 → 未完成继续填 → 完成自动拉取下一页并发布。
+
+```bash
+python3 sop_skill.py status   # 查看当前页完成情况
+python3 sop_skill.py run      # 自动：未完成就填，完成就拉下一页
+```
+
+详见 `SKILL.md`。
