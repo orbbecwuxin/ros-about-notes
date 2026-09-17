@@ -74,3 +74,44 @@ git push
 - 版本：每次推送 commit message 写清楚改了哪几段，方便回溯。
 
 *本 SOP 与页面顶部「翻译 SOP」说明保持一致。*
+
+---
+
+## 六、一键运行脚本（推荐批量方式）
+
+仓库里提供了 **`run_sop.py`**，它自动“显示原文 → 提示输入译文和理解 → 写回 index.html”，把整套 SOP 跑起来。
+
+**调用方法（在仓库目录下运行）：**
+```bash
+cd ~/ros-notes-site
+
+# 1) 交互式逐段翻译（默认）
+python3 run_sop.py
+
+# 2) 只查看进度清单（不改文件）
+python3 run_sop.py --list
+
+# 3) 从第 N 段开始翻译
+python3 run_sop.py --from 3
+```
+
+**运行时会看到：**
+```
+【第 1/22 段】 章节: About ROS
+【英文原文】
+ROS (Robot Operating System) is an open-source ecosystem ...
+📝 请输入译文（直接回车=跳过/不改）：ROS 是一个开源生态系统……
+💡 请输入理解（直接回车=跳过/不改）：这一段是全文概述……
+```
+
+**运行完会自动保存到 `index.html`**，然后推送发布：
+```bash
+git add -A
+git commit -m "按 SOP 翻译"
+git push
+```
+
+**依赖：** 需要 Python 3 和 `beautifulsoup4`（已装则跳过）：
+```bash
+pip install beautifulsoup4
+```
