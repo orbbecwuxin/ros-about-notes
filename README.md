@@ -55,3 +55,8 @@ python3 sop_skill.py run      # 自动：未完成就填，完成就拉下一页
 ```
 
 详见 `SKILL.md`。
+
+## Codex 技能
+
+本流程也已生成为 **Codex 技能**，位于 `~/.codex/skills/ros-translation/`。
+Codex 调用该技能时会自动遵守“勘误后才发布、绝不自动提交翻译”的规则。

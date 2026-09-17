@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-ROS 翻译技能 (Skill) —— 自动推进逐页翻译流程
+ROS 翻译技能 (Skill) —— 带人工勘误门禁的逐页翻译流程
+
+流程（翻译绝不自动提交）:
+    用户填翻译 → AI 勘误 → 通过后 publish (commit+push) → next (拉下一页)
 
 用法:
     python3 sop_skill.py status             # 检查当前页翻译/理解完成情况
-    python3 sop_skill.py fill               # 未完成则继续填写当前页
-    python3 sop_skill.py next               # 当前页完成则拉取下一页并发布
-    python3 sop_skill.py run                # 主流程：检查→未完成则填→完成则拉下一页 (默认)
+    python3 sop_skill.py fill               # 填写当前页（只存本地，不提交）
+    python3 sop_skill.py review             # 输出当前页译文/理解，供 AI 勘误
+    python3 sop_skill.py publish            # 勘误通过后 commit + push 发布
+    python3 sop_skill.py next               # 当前页已发布则拉取下一页（仅拉页）
+    python3 sop_skill.py run                # 主流程：自动判断当前应填写/勘误/发布/拉页
     python3 sop_skill.py sync               # 从官方 sitemap 重建 state.json
 
 选项:
@@ -18,20 +23,23 @@ from urllib.parse import urljoin, urlparse
 import requests
 from bs4 import BeautifulSoup, Comment
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
-STATE = os.path.join(ROOT, 'state.json')
+ROOT = os.environ.get('ROS_NOTES_REPO') or os.path.dirname(os.path.abspath(__file__))
 SITEMAP_URL = 'https://docs.ros.org/en/jazzy/sitemap.xml'
 BASE_URL = 'https://docs.ros.org/en/jazzy/'
 GIT_NAME, GIT_EMAIL = 'ros-skill', 'ros-skill@local'
 
 # ---------------------------------------------------------------- 工具 -----
+def state_path():
+    return os.path.join(ROOT, 'state.json')
+
 def load_state():
-    if os.path.exists(STATE):
-        return json.load(open(STATE, encoding='utf-8'))
+    p = state_path()
+    if os.path.exists(p):
+        return json.load(open(p, encoding='utf-8'))
     return {'pages': []}
 
 def save_state(state):
-    json.dump(state, open(STATE, 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
+    json.dump(state, open(state_path(), 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
 
 def git(*args):
     subprocess.run(['git', '-C', ROOT] + list(args), check=False,
@@ -262,12 +270,75 @@ def cmd_status(state, require_un):
     return done
 
 def cmd_fill(state, require_un):
+    """只填写并保存到本地，绝不自动提交。"""
     pg = current_page(state)
     if not pg:
         print('所有页面已完成。'); return
     fill_page(pg['local'])
+    print('💾 已保存到本地，但【不会自动提交/推送】。')
+    print('   请把翻译交给 AI 勘误： python3 sop_skill.py review')
+    print('   勘误通过后再发布：   python3 sop_skill.py publish')
+
+def cmd_review(state, require_un):
+    """输出当前页所有已填译文/理解，供 AI 逐段勘误。"""
+    pg = current_page(state)
+    if not pg:
+        print('所有页面已完成。'); return
+    local = pg['local']
+    path = os.path.join(ROOT, local)
+    if not os.path.exists(path):
+        print('当前页还没有本地文件，先运行 fill 或 run 拉取。'); return
+    soup = BeautifulSoup(open(path, encoding='utf-8').read(), 'html.parser')
+    boxes = soup.select('.my-translation')
+    print(f'📖 当前页：{pg["title"]}（{local}）共 {len(boxes)} 段，供 AI 勘误：')
+    issues = []
+    for i, box in enumerate(boxes, 1):
+        tr = box.find('span', class_='my-tr-text')
+        un = box.find('span', class_='my-un-text')
+        tr_t = tr.get_text(strip=True) if tr else ''
+        un_t = un.get_text(strip=True) if un else ''
+        flag = []
+        if not tr_t:
+            flag.append('缺译文')
+        elif len(tr_t) < 4:
+            flag.append('译文过短')
+        if not un_t:
+            flag.append('缺理解')
+        if box.find('span', class_='my-tr-placeholder') or box.find('span', class_='my-un-placeholder'):
+            flag.append('仍有占位符')
+        print(f'\n--- 第{i}段 ---')
+        print('【译文】', tr_t if tr_t else '（未填）')
+        print('【理解】', un_t if un_t else '（未填）')
+        if flag:
+            print('⚠️ 提示:', '、'.join(flag))
+            issues.append((i, flag))
+    if issues:
+        print(f'\n共发现 {len(issues)} 段需要关注，请 AI 结合语义给出勘误意见。')
+    else:
+        print('\n✅ 无明显缺漏，可进行语义/术语勘误。')
+
+def cmd_publish(state, require_un):
+    """勘误通过后：commit + push（发布翻译），绝不自动触发。"""
+    pg = current_page(state)
+    if not pg:
+        print('所有页面已完成。'); return
+    local = pg['local']
+    total, tr, un, undone = check_page(local, require_un)
+    print(f'当前页: {pg["title"]}  译文 {tr}/{total}  理解 {un}/{total}')
+    if total and not is_done(total, tr, un, require_un):
+        print('⚠️ 还有段落未完成，仍要发布吗？（y/N）')
+        if input().strip().lower() not in ('y', 'yes'):
+            print('已取消发布。'); return
+    ok = git_commit_push(f'✍️ 发布翻译：{pg["title"]}（勘误通过）')
+    if ok:
+        pg['reviewed'] = True
+        save_state(state)
+        print('✅ 已 commit + push，网页 1~2 分钟后刷新可见。')
+    else:
+        print('❌ push 失败或没有可提交内容，请检查 git 状态。')
 
 def cmd_next(state, require_un):
+    """当前页完成并已发布后，拉取下一页（仅拉页，不涉及翻译提交）。"""
     pg = current_page(state)
     if pg is None:
         print('所有页面已完成。'); return
@@ -275,9 +346,13 @@ def cmd_next(state, require_un):
     total, tr, un, undone = check_page(local, require_un)
     if not is_done(total, tr, un, require_un):
         print(f'❌ 当前页“{pg["title"]}”还没完成（译文 {tr}/{total}，理解 {un}/{total}）。')
-        print('   请先运行: python3 sop_skill.py fill  或  python3 sop_skill.py run')
+        print('   请先运行: python3 sop_skill.py fill')
         return
-    # 完成 → 标记 done，找下一页
+    if not pg.get('reviewed'):
+        print(f'❌ 当前页“{pg["title"]}”已填完，但还未经过勘误发布。')
+        print('   流程: python3 sop_skill.py review  →  publish  →  next')
+        return
+    # 完成且已发布 → 标记 done，找下一页
     pg['done'] = True
     nxt = None
     for cand in state['pages']:
@@ -287,12 +362,12 @@ def cmd_next(state, require_un):
         save_state(state)
         print('🎉 全部页面已完成！')
         return
-    print(f'✅ 当前页“{pg["title"]}”已完成，正在拉取下一页：{nxt["title"]} ({nxt["url"]})')
+    print(f'✅ 当前页“{pg["title"]}”已发布，拉取下一页：{nxt["title"]} ({nxt["url"]})')
     n = mirror_page(nxt['url'], nxt['local'])
     print(f'   已生成 {nxt["local"]}，插入 {n} 个译文框')
     save_state(state)
-    ok = git_commit_push(f'✅ 完成 {pg["title"]} 翻译；拉取新页 {nxt["title"]} 并发布')
-    print(f'   推送发布: {"成功 ✔" if ok else "失败（请手动 git push）"}')
+    ok = git_commit_push(f'📥 拉取新页 {nxt["title"]}（待翻译）')
+    print(f'   推送: {"成功 ✔" if ok else "失败（请手动 git push）"}')
     print(f'   新页: {nxt["local"]}   线上: {state.get("site_url","")}')
 
 def cmd_sync():
@@ -314,9 +389,13 @@ def cmd_sync():
     print(f'已同步，共 {len(new_pages)} 页')
 
 def main():
+    global ROOT
     args = sys.argv[1:]
+    if '--repo' in args:
+        i = args.index('--repo')
+        ROOT = os.path.abspath(args[i + 1])
     cmd = 'run'
-    if args and args[0] in ('status', 'fill', 'next', 'run', 'sync'):
+    if args and args[0] in ('status', 'fill', 'review', 'publish', 'next', 'run', 'sync'):
         cmd = args[0]
     require_un = '--ignore-understanding' not in args
     state = load_state()
@@ -328,6 +407,10 @@ def main():
         cmd_status(state, require_un)
     elif cmd == 'fill':
         cmd_fill(state, require_un)
+    elif cmd == 'review':
+        cmd_review(state, require_un)
+    elif cmd == 'publish':
+        cmd_publish(state, require_un)
     elif cmd == 'next':
         cmd_next(state, require_un)
     else:  # run
@@ -340,15 +423,19 @@ def main():
             n = mirror_page(pg['url'], local)
             print(f'   已生成 {local}，插入 {n} 个译文框')
             save_state(state)
-            git_commit_push(f'📥 拉取新页 {pg["title"]} 并发布')
+            git_commit_push(f'📥 拉取新页 {pg["title"]}（待翻译）')
             return
         total, tr, un, undone = check_page(local, require_un)
-        if is_done(total, tr, un, require_un):
-            print(f'✅ 当前页“{pg["title"]}”已完成，自动进入下一页流程')
-            cmd_next(state, require_un)
-        else:
+        if not is_done(total, tr, un, require_un):
             print(f'⏳ 当前页“{pg["title"]}”未完成（译文 {tr}/{total}，理解 {un}/{total}），继续填写…')
             cmd_fill(state, require_un)
+        elif not pg.get('reviewed'):
+            print(f'✅ 当前页“{pg["title"]}”已填完，进入勘误发布环节（不会自动提交）：')
+            print('   python3 sop_skill.py review   →  AI 勘误')
+            print('   python3 sop_skill.py publish  →  通过后 commit+push')
+        else:
+            print(f'✅ 当前页“{pg["title"]}”已完成并已发布，自动拉取下一页')
+            cmd_next(state, require_un)
 
 if __name__ == '__main__':
     main()
