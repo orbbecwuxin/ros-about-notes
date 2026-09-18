@@ -1,0 +1,14 @@
+{
+  "stack": [
+    {
+      "url": "https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Different-Middleware-Vendors.html",
+      "title": "DDS 与 ROS 中间件厂商",
+      "ret": {
+        "page_title": "Working with multiple ROS 2 middleware implementations",
+        "page_local": "how-to-guides-working-with-multiple-rmw-implementations.html"
+      },
+      "learn_file": "learn/en-jazzy-concepts-intermediate-about-different-middleware-vendors.md",
+      "status": "学习中"
+    }
+  ]
+}

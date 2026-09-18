@@ -33,6 +33,15 @@
       "skipped": false
     },
     {
+      "slug": "concepts-intermediate-about-different-middleware-vendors",
+      "title": "Different ROS 2 middleware vendors",
+      "url": "https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Different-Middleware-Vendors.html",
+      "local": "concepts-intermediate-about-different-middleware-vendors.html",
+      "done": false,
+      "reviewed": false,
+      "skipped": false
+    },
+    {
       "slug": "how-to-guides-working-with-multiple-rmw-implementations",
       "title": "Working with multiple ROS 2 middleware implementations",
       "url": "https://docs.ros.org/en/jazzy/How-To-Guides/Working-with-multiple-RMW-implementations.html",
@@ -2242,15 +2251,6 @@
       "title": "The ROS_DOMAIN_ID",
       "url": "https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Domain-ID.html",
       "local": "concepts-intermediate-about-domain-id.html",
-      "done": false,
-      "reviewed": false,
-      "skipped": false
-    },
-    {
-      "slug": "concepts-intermediate-about-different-middleware-vendors",
-      "title": "Different ROS 2 middleware vendors",
-      "url": "https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Different-Middleware-Vendors.html",
-      "local": "concepts-intermediate-about-different-middleware-vendors.html",
       "done": false,
       "reviewed": false,
       "skipped": false
